@@ -9,8 +9,8 @@ const generateToken = (id) => {
 export const register = async (req, res) => {
     try {
         const {name, email, password} = req.body;
-        if (!name.trim() || !email.trim() || !email.password) {
-            return res.status(400).json({ message: 'All fields are required'});
+        if (!name.trim() || !email.trim() || !password.trim()) {
+            return res.status(400).json({ message: 'All the fields are required'});
         }
         if (password.length < 6) {
             return res.status(400).json({ message: 'Password must be at least 6 characters'});
