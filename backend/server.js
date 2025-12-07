@@ -6,6 +6,7 @@ import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/auth.routes.js";
 import profileRoutes from "./routes/profile.routes.js";
 import matchRoutes from "./routes/match.routes.js";
+import sessionRoutes from "./routes/session.routes.js";
 
 const app = express();
 dotenv.config();
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/match', matchRoutes);
+app.use('/api/session', sessionRoutes);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
