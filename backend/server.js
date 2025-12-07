@@ -9,6 +9,7 @@ import authRoutes from "./routes/auth.routes.js";
 import profileRoutes from "./routes/profile.routes.js";
 import matchRoutes from "./routes/match.routes.js";
 import sessionRoutes from "./routes/session.routes.js";
+import messageRoutes from "./routes/message.routes.js";
 
 const app = express();
 dotenv.config();
@@ -49,6 +50,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/match', matchRoutes);
 app.use('/api/session', sessionRoutes);
+app.use('/api/messages', messageRoutes);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
