@@ -6,6 +6,10 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
+import Discover from './pages/Discover';
+import Matches from './pages/Matches';
+import Sessions from './pages/Sessions';
+import Messages from './pages/Messages';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -26,37 +30,69 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route 
-          path="/login" 
-          element={!user ? <Login /> : <Navigate to="/dashboard" />} 
+        <Route
+          path="/login"
+          element={!user ? <Login /> : <Navigate to="/dashboard" />}
         />
-        <Route 
-          path="/register" 
-          element={!user ? <Register /> : <Navigate to="/dashboard" />} 
+        <Route
+          path="/register"
+          element={!user ? <Register /> : <Navigate to="/dashboard" />}
         />
-        <Route 
-          path="/dashboard" 
+        <Route
+          path="/dashboard"
           element={
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route 
-          path="/profile/:userId" 
+        <Route
+          path="/profile/:userId"
           element={
             <ProtectedRoute>
               <Profile />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route 
-          path="/edit-profile" 
+        <Route
+          path="/edit-profile"
           element={
             <ProtectedRoute>
               <EditProfile />
             </ProtectedRoute>
-          } 
+          }
+        />
+        <Route
+          path="/discover"
+          element={
+            <ProtectedRoute>
+              <Discover />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/matches"
+          element={
+            <ProtectedRoute>
+              <Matches />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/sessions"
+          element={
+            <ProtectedRoute>
+              <Sessions />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/messages/:userId?"
+          element={
+            <ProtectedRoute>
+              <Messages />
+            </ProtectedRoute>
+          }
         />
         <Route path="/" element={<Navigate to={user ? "/dashboard" : "/login"} />} />
       </Routes>
