@@ -3,29 +3,29 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 const generateToken = (id) => {
-    return jwt.sign({userId: id}, process.env.JWT_SECRET, {expiresIn: '30d'});
+    return jwt.sign({ userId: id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
 export const register = async (req, res) => {
     try {
-        const {name, email, password} = req.body;
+        const { name, email, password } = req.body;
         if (!name.trim() || !email.trim() || !password.trim()) {
-            return res.status(400).json({ message: 'All the fields are required'});
+            return res.status(400).json({ message: 'All the fields are required' });
         }
         if (password.length < 6) {
-            return res.status(400).json({ message: 'Password must be at least 6 characters'});
+            return res.status(400).json({ message: 'Password must be at least 6 characters' });
         }
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             return res.status(400).json({ message: "Invalid email format" });
         }
-        const userExists = await User.findOne({email});
+        const userExists = await User.findOne({ email });
         if (userExists) {
-            return res.status(400).json({message: 'User already exists'});
+            return res.status(400).json({ message: 'User already exists' });
         }
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-        const user = await User.create({name, email, password: hashedPassword});
+        const user = await User.create({ name, email, password: hashedPassword });
         if (user) {
             const token = generateToken(user._id);
             res.cookie('jwt', token, {
@@ -35,32 +35,40 @@ export const register = async (req, res) => {
                 secure: process.env.NODE_ENV === 'production'
             });
             const newUser = {
-                userId: user._id,
+                _id: user._id,
                 name: user.name,
                 email: user.email,
+                bio: user.bio,
+                profileImage: user.profileImage,
+                skillsOffered: user.skillsOffered,
+                skillsWanted: user.skillsWanted,
+                rating: user.rating,
+                reviewCount: user.reviewCount,
+                location: user.location,
+                timezone: user.timezone
             };
-            res.status(201).json({message: 'Registered successfully', newUser});
+            res.status(201).json({ message: 'Registered successfully', newUser });
         }
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({message: 'Internal server error'});
+        res.status(500).json({ message: 'Internal server error' });
     }
 };
 
 export const login = async (req, res) => {
     try {
-        const {email, password} = req.body;
+        const { email, password } = req.body;
         if (!email.trim() || !password.trim()) {
-            return res.status(400).json({ message: 'All fields are required'});
+            return res.status(400).json({ message: 'All fields are required' });
         }
-        const user = await User.findOne({email});
+        const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({message: 'User not found'});
+            return res.status(400).json({ message: 'User not found' });
         }
         const isPasswordMatched = await bcrypt.compare(password, user.password);
         if (!isPasswordMatched) {
-            return res.status(400).json({message: "Invalid credentials"});
+            return res.status(400).json({ message: "Invalid credentials" });
         }
 
         const token = generateToken(user._id);
@@ -71,24 +79,32 @@ export const login = async (req, res) => {
             secure: process.env.NODE_ENV === 'production'
         });
         const newUser = {
-            userId: user._id,
+            _id: user._id,
             name: user.name,
             email: user.email,
+            bio: user.bio,
+            profileImage: user.profileImage,
+            skillsOffered: user.skillsOffered,
+            skillsWanted: user.skillsWanted,
+            rating: user.rating,
+            reviewCount: user.reviewCount,
+            location: user.location,
+            timezone: user.timezone
         };
-        res.status(200).json({message: 'Login successfully', newUser});
+        res.status(200).json({ message: 'Login successfully', newUser });
     } catch (error) {
         console.log(error);
-        res.status(500).json({message: 'Internal server error'});
+        res.status(500).json({ message: 'Internal server error' });
     }
 };
 
 export const logout = async (req, res) => {
     try {
-        res.cookie('jwt', '', {maxAge: 0});
-        res.status(200).json({message: 'Logout successfully'});
+        res.cookie('jwt', '', { maxAge: 0 });
+        res.status(200).json({ message: 'Logout successfully' });
     } catch (error) {
         console.log(error);
-        res.status(500).json({message: 'Internal server error'});
+        res.status(500).json({ message: 'Internal server error' });
     }
 };
 
